@@ -1,10 +1,12 @@
 // loginReq.js
+
+
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-
+    const API_URL = "https://mmconnecthosted-production.up.railway.app";
     const email = document.querySelector("input[type=email]").value.trim();
     const password = document.querySelector("input[type=password]").value.trim();
     const role = document.querySelector("select").value;
@@ -15,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/login", {
+      const response = await fetch(`${API_URL}/api/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, role }),

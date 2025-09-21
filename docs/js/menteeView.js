@@ -1,3 +1,4 @@
+const API_URL = "https://mmconnecthosted-production.up.railway.app";
 const tableBody = document.getElementById("menteesTable");
 const filterDept = document.getElementById("filterDept");
 const filterSem = document.getElementById("filterSem");
@@ -12,7 +13,7 @@ let selectedRow = null; // keep track of highlighted row
 // -----------------------------
 async function loadMentees() {
   try {
-    const res = await fetch("http://localhost:5000/api/mentees"); // adjust port if needed
+    const res = await fetch(`${API_URL}/api/mentees`); // adjust port if needed
     mentees = await res.json();
     displayMentees(mentees);
   } catch (err) {

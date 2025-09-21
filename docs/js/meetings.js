@@ -1,3 +1,4 @@
+const API_URL = "https://mmconnecthosted-production.up.railway.app";
 let currentMonth = new Date().getMonth();
 let currentYear = new Date().getFullYear();
 
@@ -66,7 +67,7 @@ document.getElementById("addMeetingBtn").addEventListener("click", openAddPopup)
 
 // Load meetings for a date
 async function loadMeetingsForDate(date) {
-  const res = await fetch(`http://localhost:5000/api/meetings?date=${date}`);
+  const res = await fetch(`${API_URL}/api/meetings?date=${date}`);
   const data = await res.json();
   let html = data.length === 0 ? "<li>No meetings</li>" :
     data.map(m => `<li>${m.time_slot} - ${m.student_name}: ${m.reason}</li>`).join("");
@@ -75,7 +76,7 @@ async function loadMeetingsForDate(date) {
 
 // Load upcoming meetings
 async function loadUpcomingMeetings(query = "") {
-  const res = await fetch(`http://localhost:5000/api/upcoming-meetings?search=${query}`);
+  const res = await fetch(`${API_URL}/api/upcoming-meetings?search=${query}`);
   const data = await res.json();
   let rows = data.map(m => `
     <tr data-id="${m.meeting_id}">
@@ -92,7 +93,7 @@ async function loadUpcomingMeetings(query = "") {
       e.preventDefault();
       const id = row.dataset.id;
       if (confirm("Are you sure you want to delete this meeting?")) {
-        await fetch(`http://localhost:5000/api/meetings/${id}`, { method: "DELETE" });
+        await fetch(`${API_URL}/api/meetings/${id}`, { method: "DELETE" });
         loadUpcomingMeetings();
       }
     });
@@ -108,7 +109,7 @@ document.getElementById("addMeetingForm").addEventListener("submit", async (e) =
     time_slot: document.getElementById("meetingTime").value,
     reason: document.getElementById("meetingReason").value,
   };
-  await fetch("http://localhost:5000/api/meetings", {
+  await fetch(`${API_URL}/api/meetings`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
@@ -125,7 +126,7 @@ document.getElementById("searchInput").addEventListener("keyup", (e) => {
 
 // Load student list
 async function loadStudents() {
-  const res = await fetch("http://localhost:5000/api/students");
+  const res = await fetch(`${API_URL}/api/students`);
   const data = await res.json();
   let options = data.map(s => `<option value="${s.student_reg_num}">${s.name}</option>`).join("");
   document.getElementById("studentSelect").innerHTML = options;

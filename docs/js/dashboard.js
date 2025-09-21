@@ -1,3 +1,4 @@
+const API_URL = "https://mmconnecthosted-production.up.railway.app";
 // ✅ Get logged-in mentor info from localStorage
 const mentor = JSON.parse(localStorage.getItem("mentorUser"));
 
@@ -11,7 +12,7 @@ let deptChart, yearChart; // Chart.js instances
 // -----------------------------
 async function loadDashboard() {
   try {
-    const res = await fetch(`http://localhost:5000/api/dashboard/${mentor.id}`);
+    const res = await fetch(`${API_URL}/api/dashboard/${mentor.id}`);
     const data = await res.json();
 
     // --- Quick Stats ---
@@ -107,7 +108,7 @@ function renderYearChart(perYear) {
 async function loadTodaysMeetings() {
   try {
     const today = new Date().toISOString().split("T")[0];
-    const res = await fetch(`http://localhost:5000/api/meetings?date=${today}`);
+    const res = await fetch(`${API_URL}/api/meetings?date=${today}`);
     const meetings = await res.json();
 
     const ul = document.getElementById("todaysMeetings");

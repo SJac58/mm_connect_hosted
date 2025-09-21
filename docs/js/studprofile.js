@@ -4,6 +4,7 @@
 const urlParams = new URLSearchParams(window.location.search);
 const regNum = urlParams.get("reg") || "";
 
+const API_URL = "https://mmconnecthosted-production.up.railway.app";
 // ✅ Get logged-in mentor from localStorage
 let mentorId = null;
 try {
@@ -41,7 +42,7 @@ let chartInstance = null;
 // -----------------------------
 async function fetchProfile() {
   try {
-    const res = await fetch(`http://localhost:5000/api/student/${encodeURIComponent(regNum)}`);
+    const res = await fetch(`${API_URL}/api/student/${encodeURIComponent(regNum)}`);
     if (!res.ok) {
       const msg = await res.json();
       alert("Error: " + (msg.message || res.statusText));
