@@ -5,27 +5,23 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const path = require("path");
 
-const db = require("./config/db"); // ✅ DB connection using environment variables
+const db = require("./config/db"); // DB connection
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
 // -----------------------------
-// ✅ Frontend serving (optional)
+// Serve frontend (optional)
 // -----------------------------
-// If you want to serve frontend from backend, uncomment the following lines:
-// console.log("Serving frontend from:", path.join(__dirname, "../frontend"));
-// app.use(express.static(path.join(__dirname, "../frontend")));
+app.use(express.static(path.join(__dirname, "../docs")));
 
-// Default route → login page
 app.get("/", (req, res) => {
-  // Change path if hosting frontend separately
   res.sendFile(path.join(__dirname, "../docs/loginPage.html"));
 });
 
 // -----------------------------
-// ✅ Login route
+// Login
 // -----------------------------
 app.post("/api/login", async (req, res) => {
   const { email, password, role } = req.body;
@@ -56,7 +52,7 @@ app.post("/api/login", async (req, res) => {
 });
 
 // -----------------------------
-// ✅ Dashboard stats
+// Dashboard stats
 // -----------------------------
 app.get("/api/dashboard/:mentorId", async (req, res) => {
   const { mentorId } = req.params;
@@ -98,7 +94,7 @@ app.get("/api/dashboard/:mentorId", async (req, res) => {
 });
 
 // -----------------------------
-// ✅ Mentee list
+// Mentees list
 // -----------------------------
 app.get("/api/mentees", async (req, res) => {
   try {
@@ -117,7 +113,7 @@ app.get("/api/mentees", async (req, res) => {
 });
 
 // -----------------------------
-// Helper: parse JSON/text extracurricular field
+// Student profile
 // -----------------------------
 function tryParseJSON(value) {
   if (!value) return [];
@@ -131,9 +127,6 @@ function tryParseJSON(value) {
   }
 }
 
-// -----------------------------
-// ✅ Student profile route
-// -----------------------------
 app.get("/api/student/:regNum", async (req, res) => {
   const { regNum } = req.params;
   try {
@@ -190,7 +183,7 @@ app.get("/api/student/:regNum", async (req, res) => {
 });
 
 // -----------------------------
-// ✅ Mentor Notes
+// Mentor Notes
 // -----------------------------
 app.post("/api/notes", async (req, res) => {
   const { mentor_id, student_reg_num, note } = req.body;
@@ -225,7 +218,7 @@ app.get("/api/notes/:student_reg_num", async (req, res) => {
 });
 
 // -----------------------------
-// ✅ Meetings (CRUD)
+// Meetings (CRUD)
 // -----------------------------
 app.get("/api/meetings", async (req, res) => {
   const { date } = req.query;
@@ -317,7 +310,7 @@ app.delete("/api/meetings/:id", async (req, res) => {
 });
 
 // -----------------------------
-// ✅ Start server (dynamic port for Railway)
+// Start server
 // -----------------------------
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
