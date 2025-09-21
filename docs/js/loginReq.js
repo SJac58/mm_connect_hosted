@@ -1,12 +1,11 @@
 // loginReq.js
-
-
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
+  const API_URL = "https://mmconnecthosted-production.up.railway.app";
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const API_URL = "https://mmconnecthosted-production.up.railway.app";
+
     const email = document.querySelector("input[type=email]").value.trim();
     const password = document.querySelector("input[type=password]").value.trim();
     const role = document.querySelector("select").value;
@@ -29,11 +28,8 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("✅ " + data.message);
 
         if (role === "mentor") {
-          // ✅ Save mentor info in localStorage (used by profile page & meetings)
-          localStorage.setItem("user", JSON.stringify(data.user));
-
-          // Redirect to mentor dashboard
-          window.location.href = "dashboardPage.html";
+          // Redirect to dashboard with mentorId in URL
+          window.location.href = `dashboardPage.html?mentorId=${data.user.id}`;
         } else {
           alert("⚠️ Only mentors can log in here.");
         }

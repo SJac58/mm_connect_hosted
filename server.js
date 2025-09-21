@@ -93,6 +93,16 @@ app.get("/api/dashboard/:mentorId", async (req, res) => {
   }
 });
 
+
+// -----------------------------
+// Mentor info
+// -----------------------------
+app.get("/api/mentor/:mentorId", async (req, res) => {
+    const { mentorId } = req.params;
+    const [rows] = await db.query("SELECT mentor_id, name FROM mentors WHERE mentor_id = ?", [mentorId]);
+    res.json(rows[0] || null);
+});
+
 // -----------------------------
 // Mentees list
 // -----------------------------
