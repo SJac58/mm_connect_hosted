@@ -14,10 +14,10 @@ app.use(bodyParser.json());
 // -----------------------------
 // Serve frontend (optional)
 // -----------------------------
-app.use(express.static(path.join(__dirname, "../docs")));
+app.use(express.static(path.join(__dirname, "docs")));
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../docs/loginPage.html"));
+  res.sendFile(path.join(__dirname, "docs/loginPage.html"));
 });
 
 // -----------------------------
