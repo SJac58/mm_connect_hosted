@@ -64,7 +64,7 @@ function renderProfile(data) {
   els.name.textContent = student.name;
   els.meta.textContent = `Year ${student.year || "-"}, ${student.dept || "-"}`;
   els.studentRole.textContent = "Mentee";
-  els.profilePhoto.src = "assets/profileplaceholder.png";
+  els.profilePhoto.src = "../assets/profileplaceholder.png";
 
   // Extracurricular
   els.extracurricularList.innerHTML = "";
