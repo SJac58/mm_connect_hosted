@@ -6,23 +6,40 @@ const urlParams = new URLSearchParams(window.location.search);
 const mentorId = urlParams.get("mentorId");
 
 if (!mentorId) {
- alert("⚠️ Mentor not specified. Please log in.");
- window.location.href = "loginPage.html";
+  alert("⚠️ Mentor not specified. Please log in.");
+  window.location.href = "loginPage.html";
 }
 
 let deptChart, yearChart;
 
-// Greeting
-const res = await fetch(`${API_URL}/api/mentor/${mentorId}`);
-const mentor = await res.json();
-document.getElementById("greeting-message").textContent = `Welcome, ${mentor.name}`;
+// -----------------------------
+// Fetch mentor info & initialize dashboard
+// -----------------------------
+async function initDashboard() {
+  try {
+    // Fetch mentor info
+    const resMentor = await fetch(`${API_URL}/api/mentor/${mentorId}`);
+    const mentor = await resMentor.json();
+    document.getElementById("greeting-message").textContent = `Welcome, ${mentor.name}`;
 
+    // Load dashboard stats and mentees
+    await loadDashboard();
+    await loadTodaysMeetings();
+  } catch (err) {
+    console.error("❌ Error initializing dashboard:", err);
+    document.getElementById("greeting-message").textContent = `Welcome, Mentor`;
+  }
+}
+
+// -----------------------------
+// Load dashboard stats and mentees
+// -----------------------------
 async function loadDashboard() {
   try {
     const res = await fetch(`${API_URL}/api/dashboard/${mentorId}`);
     const data = await res.json();
 
-    // --- Quick Stats ---
+    // Quick stats
     document.getElementById("totalMentees").textContent = data.totalMentees;
 
     // Overall Progress
@@ -35,20 +52,19 @@ async function loadDashboard() {
     attendanceBar.style.width = data.avgAttendance + "%";
     attendanceBar.textContent = data.avgAttendance + "%";
 
-    // --- Charts ---
+    // Charts
     renderDeptChart(data.perDept);
     renderYearChart(data.perYear);
 
-    // --- Mentees Table ---
-    document.getElementById("menteesTable").innerHTML = data.mentees
+    // Mentees Table
+    const tableBody = document.getElementById("menteesTable");
+    tableBody.innerHTML = data.mentees
       .map(
-        (m) => `
-        <tr>
+        (m) => `<tr>
           <td>${m.name}</td>
           <td>${m.dept}</td>
           <td>${m.semester}</td>
-        </tr>
-      `
+        </tr>`
       )
       .join("");
   } catch (err) {
@@ -66,15 +82,9 @@ function renderDeptChart(perDept) {
     type: "bar",
     data: {
       labels: Object.keys(perDept),
-      datasets: [
-        { label: "Students", data: Object.values(perDept), backgroundColor: "#8d4c45" },
-      ],
+      datasets: [{ label: "Students", data: Object.values(perDept), backgroundColor: "#8d4c45" }],
     },
-    options: {
-      responsive: true,
-      plugins: { legend: { display: false } },
-      scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
-    },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } },
   });
 }
 
@@ -85,15 +95,9 @@ function renderYearChart(perYear) {
     type: "bar",
     data: {
       labels: Object.keys(perYear).map((y) => "Year " + y),
-      datasets: [
-        { label: "Students", data: Object.values(perYear), backgroundColor: "#a85c54" },
-      ],
+      datasets: [{ label: "Students", data: Object.values(perYear), backgroundColor: "#a85c54" }],
     },
-    options: {
-      responsive: true,
-      plugins: { legend: { display: false } },
-      scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
-    },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } },
   });
 }
 
@@ -118,9 +122,6 @@ async function loadTodaysMeetings() {
 }
 
 // -----------------------------
-// Init
+// Init on DOMContentLoaded
 // -----------------------------
-document.addEventListener("DOMContentLoaded", () => {
-  loadDashboard();
-  loadTodaysMeetings();
-});
+document.addEventListener("DOMContentLoaded", initDashboard);
